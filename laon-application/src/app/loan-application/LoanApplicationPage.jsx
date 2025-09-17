@@ -13,13 +13,13 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Upload, AlertCircle } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, differenceInYears } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+const phoneRegex = /^\d{1,13}$/; // Production-grade: numeric only, max 13 digits
 
 const loanApplicationSchema = z.object({
   // Personal Information
@@ -27,38 +27,55 @@ const loanApplicationSchema = z.object({
   dateOfBirth: z.date({
     required_error: 'Date of birth is required',
     invalid_type_error: "Please select a valid date",
-  }),
+  }).refine(date => {
+    const age = differenceInYears(new Date(), date);
+    return age >= 18;
+  }, { message: 'Applicant must be at least 18 years old' }),
   nationalId: z.string().min(1, { message: 'National ID is required' }),
-  phoneNumber: z.string().min(1, { message: 'Phone number is required' }).regex(phoneRegex, { message: 'Please enter a valid phone number' }),
+  phoneNumber: z.string().min(1, { message: 'Phone number is required' }).regex(phoneRegex, { message: 'Phone number must be numeric and maximum 13 digits' }),
   emailAddress: z.string().min(1, { message: 'Email address is required' }).email({ message: 'Please enter a valid email address' }),
-  monthlyIncome: z.string().min(1, { message: 'Monthly income is required' }),
-  loanAmount: z.string().min(1, { message: 'Loan amount is required' }),
+  monthlyIncome: z.string().min(1, { message: 'Monthly income is required' }).refine(val => !isNaN(parseFloat(val)) && parseFloat(val) > 0, { message: 'Monthly income must be a valid positive number' }),
+  loanAmount: z.string().min(1, { message: 'Loan amount is required' }).refine(val => !isNaN(parseFloat(val)) && parseFloat(val) > 0, { message: 'Loan amount must be a valid positive number' }),
   referencePersonName: z.string().min(2, { message: 'Reference person name is required (minimum 2 characters)' }),
-  referencePersonNumber: z.string().min(1, { message: 'Reference person number is required' }).regex(phoneRegex, { message: 'Please enter a valid reference phone number' }),
+  referencePersonNumber: z.string().min(1, { message: 'Reference person number is required' }).regex(phoneRegex, { message: 'Reference number must be numeric and maximum 13 digits' }),
   
   // Employment & Income Details
-  occupationEmployer: z.string().min(2, { message: 'Occupation/Employer name is required (minimum 2 characters)' }),
+  occupation: z.string().min(2, { message: 'Occupation is required (minimum 2 characters)' }),
   employmentType: z.enum(['Self-Employed', 'Salaried', 'Unemployed', 'Student', 'Retired'], {
     required_error: 'Employment type is required',
   }),
-  itemCategory: z.enum(['Electronics', 'Furniture', 'Agriculture', 'Services', 'Other'], {
+  itemCategory: z.enum(['Electronics', 'Home Appliances', 'Furniture', 'Services', 'Other'], {
     required_error: 'Item category is required',
   }),
-  preferredPaymentPlan: z.enum(['6-months', '8-months', '1-year', '2-years', '3-years'], {
+  preferredPaymentPlan: z.enum(['6 months', '8 months', '1 year', '2 years', '3 years'], {
     required_error: 'Payment plan is required',
   }),
   workingPlace: z.string().min(2, { message: 'Working place is required (minimum 2 characters)' }),
   
   // Submission
-  agreeTerms: z.boolean().refine(val => val === true, {
+  agreedTerms: z.boolean().refine(val => val === true, {
     message: 'You must agree to the terms and conditions',
   }),
-  consentInformation: z.boolean().refine(val => val === true, {
-    message: 'You must provide consent for information usage',
+  consentForLoan: z.boolean().refine(val => val === true, {
+    message: 'You must provide consent for loan processing',
   }),
   uploadedDocument: z.any().refine(files => files && files.length > 0, {
     message: 'Please upload required documents',
   }),
+}).refine(data => {
+  // Business Rule: Reference number cannot match applicant's phone
+  return data.referencePersonNumber !== data.phoneNumber;
+}, {
+  message: 'Reference person number cannot match your phone number',
+  path: ['referencePersonNumber']
+}).refine(data => {
+  // Business Rule: Loan amount cannot exceed monthly income
+  const monthlyIncome = parseFloat(data.monthlyIncome);
+  const loanAmount = parseFloat(data.loanAmount);
+  return !isNaN(monthlyIncome) && !isNaN(loanAmount) && loanAmount <= monthlyIncome;
+}, {
+  message: 'Loan amount cannot exceed monthly income',
+  path: ['loanAmount']
 });
 
 export default function LoanApplicationPage() {
@@ -121,10 +138,10 @@ export default function LoanApplicationPage() {
   const nextStep = async () => {
     const fields = {
       1: ['fullName', 'dateOfBirth', 'phoneNumber', 'emailAddress', 'referencePersonName', 'referencePersonNumber'],
-      2: ['occupationEmployer', 'employmentType', 'itemCategory', 'preferredPaymentPlan', 'workingPlace'],
-      3: ['loanAmount', 'loanPurpose', 'loanTerm'],
-      4: ['reference1Name', 'reference1Phone', 'reference1Relationship', 'reference2Name', 'reference2Phone', 'reference2Relationship'],
-      5: ['idDocument', 'proofOfIncome', 'proofOfAddress'],
+      2: ['occupation', 'employmentType', 'itemCategory', 'preferredPaymentPlan', 'workingPlace'],
+      3: ['monthlyIncome', 'loanAmount'],
+      4: ['agreedTerms', 'consentForLoan'],
+      5: ['uploadedDocument'],
     }[currentStep];
 
     const isValid = await trigger(fields);
@@ -139,38 +156,128 @@ export default function LoanApplicationPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // WhatsApp notification function
+  const sendWhatsAppNotification = async (applicationData) => {
+    try {
+      const message = `🔔 New Loan Application Submitted:
+
+👤 Name: ${applicationData.full_name}
+📞 Phone: ${applicationData.phone_number}
+💰 Loan Amount: $${applicationData.loan_amount}
+👔 Employment: ${applicationData.employment_type}
+📦 Item Category: ${applicationData.item_category}
+📅 Payment Plan: ${applicationData.preferred_payment_plan}
+🏢 Working Place: ${applicationData.working_place}
+💵 Monthly Income: $${applicationData.monthly_income}
+
+📋 Application ID: ${applicationData.id || 'Generated'}
+⏰ Submitted: ${new Date().toLocaleString()}`;
+
+      // Replace with your actual WhatsApp API endpoint and phone number
+      const whatsappResponse = await fetch('/api/send-whatsapp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: '+1234567890', // Replace with your WhatsApp number
+          message: message
+        })
+      });
+
+      if (whatsappResponse.ok) {
+        console.log('✅ WhatsApp notification sent successfully!');
+      } else {
+        console.error('❌ Failed to send WhatsApp notification:', await whatsappResponse.text());
+      }
+    } catch (whatsappError) {
+      console.error('❌ WhatsApp notification error:', whatsappError);
+      // Don't fail the entire submission if WhatsApp fails
+    }
+  };
+
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     setSubmissionMessage('');
     
     try {
-      // Validate required fields before submission
-      const allowedEmploymentTypes = ['Self-Employed', 'Salaried', 'Unemployed', 'Student', 'Retired'];
-      if (!allowedEmploymentTypes.includes(data.employmentType)) {
-        console.error("Invalid employment type:", data.employmentType);
+      // --- Step 1: Basic Required Fields ---
+      const requiredFields = [
+        'fullName', 'nationalId', 'dateOfBirth', 'phoneNumber', 'emailAddress',
+        'referencePersonName', 'referencePersonNumber', 'occupation',
+        'employmentType', 'itemCategory', 'preferredPaymentPlan',
+        'workingPlace', 'monthlyIncome', 'loanAmount',
+      ];
+      
+      for (const field of requiredFields) {
+        if (!data[field]) {
+          console.error(`Missing required field: ${field}`);
+          setSubmissionMessage(`Missing required field: ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+          setMessageType('error');
+          return;
+        }
+      }
+
+      // --- Step 2: Phone Number Validation ---
+      if (!/^\d{1,13}$/.test(data.phoneNumber)) {
+        console.error("Phone number must be numeric and max 13 digits");
+        setSubmissionMessage('Phone number must be numeric and maximum 13 digits');
+        setMessageType('error');
+        return;
+      }
+
+      // --- Step 3: Reference Person Number Validation ---
+      if (data.referencePersonNumber === data.phoneNumber) {
+        console.error("Reference number cannot match applicant's phone number");
+        setSubmissionMessage("Reference person number cannot match your phone number");
+        setMessageType('error');
+        return;
+      }
+
+      // --- Step 4: Date of Birth Validation (>= 18 years old) ---
+      const age = differenceInYears(new Date(), data.dateOfBirth);
+      if (age < 18) {
+        console.error("Applicant must be at least 18 years old");
+        setSubmissionMessage('Applicant must be at least 18 years old');
+        setMessageType('error');
+        return;
+      }
+
+      // --- Step 5: Loan Amount Validation ---
+      const monthlyIncome = parseFloat(data.monthlyIncome);
+      const loanAmount = parseFloat(data.loanAmount);
+      if (loanAmount > monthlyIncome) {
+        console.error("Loan amount cannot exceed monthly income");
+        setSubmissionMessage('Loan amount cannot exceed monthly income');
+        setMessageType('error');
+        return;
+      }
+
+      // --- Step 6: Dropdown Validations ---
+      const validEmploymentTypes = ['Self-Employed', 'Salaried', 'Unemployed', 'Student', 'Retired'];
+      const validItemCategories = ['Electronics', 'Home Appliances', 'Furniture', 'Services', 'Other'];
+      const validPaymentPlans = ['6 months', '8 months', '1 year', '2 years', '3 years'];
+
+      if (!validEmploymentTypes.includes(data.employmentType)) {
+        console.error("Invalid employment type");
         setSubmissionMessage('Invalid employment type. Please select a valid option.');
         setMessageType('error');
         return;
       }
-
-      // Validate item_category
-      const allowedItemCategories = ['Electronics', 'Furniture', 'Agriculture', 'Services', 'Other'];
-      if (!allowedItemCategories.includes(data.itemCategory)) {
-        console.error("Invalid item category:", data.itemCategory);
+      if (!validItemCategories.includes(data.itemCategory)) {
+        console.error("Invalid item category");
         setSubmissionMessage('Invalid item category. Please select a valid option.');
         setMessageType('error');
         return;
       }
-
-      // Validate required fields
-      if (!data.fullName || !data.nationalId || !data.phoneNumber || !data.emailAddress || !data.monthlyIncome || !data.loanAmount) {
-        console.error("Missing required fields");
-        setSubmissionMessage('Please fill in all required fields.');
+      if (!validPaymentPlans.includes(data.preferredPaymentPlan)) {
+        console.error("Invalid preferred payment plan");
+        setSubmissionMessage('Invalid preferred payment plan. Please select a valid option.');
         setMessageType('error');
         return;
       }
 
-      // Validate file upload
+      // --- Step 7: File Upload Validation ---
       if (uploadedFiles.length === 0) {
         console.error("No files uploaded");
         setSubmissionMessage('Please upload required documents.');
@@ -178,69 +285,68 @@ export default function LoanApplicationPage() {
         return;
       }
 
-      // Upload files to Supabase storage first
-      let documentUrls = [];
-      if (uploadedFiles.length > 0) {
-        for (const file of uploadedFiles) {
-          const fileName = `loan-applications/${Date.now()}-${file.name}`;
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('loan-documents')
-            .upload(fileName, file);
+      // --- Step 8: Upload Document ---
+      const file = uploadedFiles[0];
+      const { data: fileData, error: fileError } = await supabase.storage
+        .from("loan-documents")
+        .upload(`loan-applications/${Date.now()}-${file.name}`, file);
 
-          if (uploadError) {
-            console.error("File upload failed:", uploadError.message);
-            throw uploadError;
-          } else {
-            console.log("File uploaded successfully:", uploadData);
-          }
-
-          documentUrls.push(uploadData.path);
-        }
+      if (fileError) {
+        console.error("File upload failed:", fileError.message);
+        setSubmissionMessage('File upload failed. Please try again.');
+        setMessageType('error');
+        return;
       }
+      console.log("✅ File uploaded successfully:", fileData);
 
-      // Insert application data
+      // --- Step 9: Insert into Database ---
+      const applicationData = {
+        full_name: data.fullName,
+        national_id: data.nationalId,
+        date_of_birth: data.dateOfBirth,
+        phone_number: data.phoneNumber,
+        email_address: data.emailAddress,
+        reference_person_name: data.referencePersonName,
+        reference_person_number: data.referencePersonNumber,
+        occupation: data.occupation,
+        employment_type: data.employmentType,
+        item_category: data.itemCategory,
+        preferred_payment_plan: data.preferredPaymentPlan,
+        working_place: data.workingPlace,
+        monthly_income: monthlyIncome,
+        loan_amount: loanAmount,
+        agreed_terms: !!data.agreedTerms,
+        consent_for_loan: !!data.consentForLoan,
+        document_path: fileData.path
+      };
+
       const { data: insertedData, error } = await supabase
         .from('loan_applications')
-        .insert([
-          {
-            full_name: data.fullName,
-            date_of_birth: data.dateOfBirth,
-            national_id: data.nationalId,
-            phone_number: data.phoneNumber,
-            email: data.emailAddress,
-            monthly_income: parseFloat(data.monthlyIncome) || 0,
-            loan_amount: parseFloat(data.loanAmount) || 0,
-            reference_person_name: data.referencePersonName,
-            reference_person_number: data.referencePersonNumber,
-            occupation_employer: data.occupationEmployer,
-            employment_type: data.employmentType,
-            item_category: data.itemCategory,
-            preferred_payment_plan: data.preferredPaymentPlan,
-            working_place: data.workingPlace,
-            agree_terms: data.agreeTerms,
-            consent_information: data.consentInformation,
-            document_urls: documentUrls,
-            status: 'pending',
-            created_at: new Date().toISOString(),
-          }
-        ])
-        .select(); // Return the inserted row(s)
+        .insert([applicationData])
+        .select();
 
       if (error) {
-        console.error("Error submitting:", error.message);
-        throw error;
-      } else {
-        console.log("Application submitted:", insertedData);
+        console.error("❌ Error submitting application:", error.message);
+        setSubmissionMessage(`Submission failed: ${error.message}`);
+        setMessageType('error');
+        return;
+      }
+      
+      console.log("✅ Application submitted successfully:", insertedData);
+      
+      // --- Step 10: Send WhatsApp Notification ---
+      if (insertedData && insertedData[0]) {
+        await sendWhatsAppNotification({ ...applicationData, id: insertedData[0].id });
       }
 
-      setSubmissionMessage('Application Submitted Successfully!');
+      setSubmissionMessage('🎉 Application submitted successfully! We will review your application and contact you soon. A notification has been sent to our team.');
       setMessageType('success');
       reset();
       setUploadedFiles([]);
       
     } catch (error) {
-      console.error('Error submitting application:', error);
-      setSubmissionMessage('Submission Failed. Please try again.');
+      console.error('❌ Error submitting application:', error);
+      setSubmissionMessage('Submission failed. Please try again.');
       setMessageType('error');
     } finally {
       setIsSubmitting(false);
@@ -343,9 +449,9 @@ export default function LoanApplicationPage() {
               <p className="text-sm text-gray-500 mb-6">Fill This Area</p>
               <div className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="occupationEmployer">Occupation / Employer Name *</Label>
-                  <Input id="occupationEmployer" placeholder="Enter your occupation or employer name" {...register('occupationEmployer')} />
-                  {errors.occupationEmployer && <p className="text-red-500 text-sm">{errors.occupationEmployer.message}</p>}
+                  <Label htmlFor="occupation">Occupation *</Label>
+                  <Input id="occupation" placeholder="Enter your occupation" {...register('occupation')} />
+                  {errors.occupation && <p className="text-red-500 text-sm">{errors.occupation.message}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="employmentType">Employment Type *</Label>
@@ -371,8 +477,8 @@ export default function LoanApplicationPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Electronics">Electronics</SelectItem>
+                      <SelectItem value="Home Appliances">Home Appliances</SelectItem>
                       <SelectItem value="Furniture">Furniture</SelectItem>
-                      <SelectItem value="Agriculture">Agriculture</SelectItem>
                       <SelectItem value="Services">Services</SelectItem>
                       <SelectItem value="Other">Other</SelectItem>
                     </SelectContent>
@@ -386,11 +492,11 @@ export default function LoanApplicationPage() {
                       <SelectValue placeholder="Select payment plan" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="6-months">6 Months</SelectItem>
-                      <SelectItem value="8-months">8 Months</SelectItem>
-                      <SelectItem value="1-year">1 Year</SelectItem>
-                      <SelectItem value="2-years">2 Years</SelectItem>
-                      <SelectItem value="3-years">3 Years</SelectItem>
+                      <SelectItem value="6 months">6 Months</SelectItem>
+                      <SelectItem value="8 months">8 Months</SelectItem>
+                      <SelectItem value="1 year">1 Year</SelectItem>
+                      <SelectItem value="2 years">2 Years</SelectItem>
+                      <SelectItem value="3 years">3 Years</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.preferredPaymentPlan && <p className="text-red-500 text-sm">{errors.preferredPaymentPlan.message}</p>}
@@ -421,29 +527,29 @@ export default function LoanApplicationPage() {
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Checkbox 
-                  id="agreeTerms" 
-                  {...register('agreeTerms', {
+                  id="agreedTerms" 
+                  {...register('agreedTerms', {
                     setValueAs: (value) => Boolean(value)
                   })}
                 />
-                <Label htmlFor="agreeTerms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <Label htmlFor="agreedTerms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Agree to Aduunyo Solutions' Terms & Conditions
                 </Label>
               </div>
-              {errors.agreeTerms && <p className="text-red-500 text-sm">{errors.agreeTerms.message}</p>}
+              {errors.agreedTerms && <p className="text-red-500 text-sm">{errors.agreedTerms.message}</p>}
               
               <div className="flex items-center space-x-2">
                 <Checkbox 
-                  id="consentInformation" 
-                  {...register('consentInformation', {
+                  id="consentForLoan" 
+                  {...register('consentForLoan', {
                     setValueAs: (value) => Boolean(value)
                   })}
                 />
-                <Label htmlFor="consentInformation" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <Label htmlFor="consentForLoan" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   I consent to my information being used for loan assessment purposes
                 </Label>
               </div>
-              {errors.consentInformation && <p className="text-red-500 text-sm">{errors.consentInformation.message}</p>}
+              {errors.consentForLoan && <p className="text-red-500 text-sm">{errors.consentForLoan.message}</p>}
               
               <div className="space-y-2">
                 <Label htmlFor="uploadedDocument">Upload Required Documents *</Label>
@@ -503,7 +609,7 @@ export default function LoanApplicationPage() {
               
               <div className="flex justify-end gap-3 mt-6">
                 <Button variant="outline" type="button" className="rounded-lg">Cancel</Button>
-                <Button type="submit" disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white rounded-lg disabled:opacity-50">
+                <Button type="submit" disabled={isSubmitting} className="bg-#5BA44C hover:bg-#5BA44C text-white rounded-lg disabled:opacity-50">
                   {isSubmitting ? 'Submitting...' : 'Submit Application'}
                 </Button>
               </div>
