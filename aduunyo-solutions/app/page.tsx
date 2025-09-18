@@ -4,7 +4,7 @@ import '@/app/landing.css';
 import '@/app/styles/landing.css';
 
 // Import the client component
-import HomeClient from '@/components/home/home-client';
+import HomeClient from '../components/home/home-client';
 
 export const metadata: Metadata = {
   title: "Aduunyo — Financial Freedom",

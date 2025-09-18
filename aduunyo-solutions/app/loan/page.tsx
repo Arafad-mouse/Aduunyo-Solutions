@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label';
 import Navbar from '@/components/navbar/navbar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar22 } from '@/components/ui/calendar22';
+import { Calendar } from '@/components/ui/calendar';  // ✅ Correct import
 
 const phoneRegex = /^\d{1,13}$/; // Production-grade: numeric only, max 13 digits
 
@@ -367,9 +367,18 @@ export default function LoanApplicationPage() {
                     name="dateOfBirth"
                     control={control}
                     render={({ field }) => (
-                      <Calendar22
-                        value={field.value}
-                        onChange={field.onChange}
+                      <Calendar
+                        mode="single"
+                        selected={field.value ? new Date(field.value) : undefined}
+                        onSelect={(date) => {
+                          if (date) {
+                            field.onChange(date.toISOString().split('T')[0]);
+                          } else {
+                            field.onChange('');
+                          }
+                        }}
+                        className="rounded-md border"
+                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                       />
                     )}
                   />

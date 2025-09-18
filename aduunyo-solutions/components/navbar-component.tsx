@@ -141,7 +141,7 @@ export function AduunyoNavbar() {
 
             <NavigationMenuItem>
               <NavigationMenuLink asChild>
-                <Link href="/loan-application" className={`${navigationMenuTriggerStyle()} bg-primary text-primary-foreground hover:bg-primary/90`}>
+                <Link href="/loan" className={`${navigationMenuTriggerStyle()} bg-primary text-primary-foreground hover:bg-primary/90`}>
                   Apply Now
                 </Link>
               </NavigationMenuLink>
