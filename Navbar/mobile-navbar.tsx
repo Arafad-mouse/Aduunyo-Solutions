@@ -164,8 +164,8 @@ export function ResponsiveNavbar() {
               <span className="sr-only">Toggle Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="pr-0">
-            <div className="flex flex-col space-y-3">
+          <SheetContent side="right">
+            <div className="pr-0 flex flex-col space-y-3">
               <Link
                 href="/"
                 className="flex items-center"
