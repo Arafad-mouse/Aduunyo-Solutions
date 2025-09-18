@@ -1,0 +1,99 @@
+/* Footer Component Styles */
+.rc-footer {
+  background-color: #1a2844;
+  color: white;
+  padding: 3rem 0 1rem;
+}
+
+.rc-footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.rc-footer-columns {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rc-footer-column {
+  flex: 1;
+  min-width: 200px;
+}
+
+.rc-footer-column h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.rc-footer-item {
+  margin-bottom: 0.5rem;
+}
+
+.rc-footer-item a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: block;
+  padding: 0.25rem 0;
+}
+
+.rc-footer-item a:hover {
+  color: #5ba44c;
+}
+
+.rc-footer-item-description {
+  color: #999;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.rc-footer-item-separator {
+  margin: 0 0.5rem;
+  color: #666;
+}
+
+.rc-footer-bottom {
+  border-top: 1px solid #333;
+  padding-top: 2rem;
+}
+
+.rc-footer-bottom-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Dark theme specific styles */
+.rc-footer-dark {
+  background-color: #1a2844;
+}
+
+.rc-footer-dark .rc-footer-column h2 {
+  color: white;
+}
+
+.rc-footer-dark .rc-footer-item a {
+  color: #ccc;
+}
+
+.rc-footer-dark .rc-footer-item a:hover {
+  color: #5ba44c;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .rc-footer-columns {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .rc-footer-column {
+    min-width: auto;
+  }
+}
