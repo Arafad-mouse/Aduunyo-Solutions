@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -24,10 +25,10 @@ const Footer = () => {
           <div>
             <h3 className="text-sm font-semibold tracking-wider uppercase text-[#8BB42E]">Quick links</h3>
             <ul className="mt-4 space-y-4">
-              <li><a href="/" className="text-base text-gray-500 hover:text-gray-900">Home</a></li>
-              <li><a href="/#about-us" className="text-base text-gray-500 hover:text-gray-900">About</a></li>
-              <li><a href="/loan-application" className="text-base text-gray-500 hover:text-gray-900">Apply Now</a></li>
-              <li><a href="/contact" className="text-base text-gray-500 hover:text-gray-900">Contacts</a></li>
+              <li><Link href="/" className="text-base text-gray-500 hover:text-gray-900">Home</Link></li>
+              <li><Link href="/#about-us" className="text-base text-gray-500 hover:text-gray-900">About</Link></li>
+              <li><Link href="/loan-application" className="text-base text-gray-500 hover:text-gray-900">Apply Now</Link></li>
+              <li><Link href="/contact" className="text-base text-gray-500 hover:text-gray-900">Contacts</Link></li>
             </ul>
           </div>
 

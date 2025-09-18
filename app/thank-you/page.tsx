@@ -13,8 +13,8 @@ export default function ThankYouPage() {
         </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Application Submitted!</h1>
         <p className="text-gray-600 mb-8">
-          Thank you for your loan application. We've received your information and our team will 
-          review it shortly. You'll receive a confirmation email with further details.
+          Thank you for your loan application. We&apos;ve received your information and our team will 
+          review it shortly. You&apos;ll receive a confirmation email with further details.
         </p>
         <div className="space-y-4">
           <Button asChild className="w-full bg-primary hover:bg-primary/90">

@@ -67,25 +67,25 @@ export default function Home() {
   {/* Testimonial 1 */}
   <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm mt-6">
     <Image src="/landing/avatar0.png" alt="Testimonial 1" width={60} height={60} className="rounded-full" />
-    <p className="text-gray-700">"The loan process was smooth, and the support was exceptional. Highly recommend!"</p>
+    <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
 
   {/* Testimonial 2 */}
   <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm mt-6">
     <Image src="/landing/avatar1.png" alt="Testimonial 2" width={60} height={60} className="rounded-full" />
-    <p className="text-gray-700">"The loan process was smooth, and the support was exceptional. Highly recommend!"</p>
+    <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
 
   {/* Testimonial 3 */}
   <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm">
     <Image src="/landing/avatar2.png" alt="Testimonial 3" width={60} height={60} className="rounded-full" />
-    <p className="text-gray-700">"The loan process was smooth, and the support was exceptional. Highly recommend!"</p>
+    <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
 
   {/* Testimonial 4 */}
   <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm">
     <Image src="/landing/avatar3.png" alt="Testimonial 4" width={60} height={60} className="rounded-full" />
-    <p className="text-gray-700">"The loan process was smooth, and the support was exceptional. Highly recommend!"</p>
+    <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
 </div>
 
