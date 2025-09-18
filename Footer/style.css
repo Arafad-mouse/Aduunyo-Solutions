@@ -1,0 +1,425 @@
+.footer,
+.footer * {
+  box-sizing: border-box;
+}
+.footer {
+  background: linear-gradient(
+    98.44deg,
+    rgba(26, 40, 68, 1) 0%,
+    rgba(37, 126, 186, 1) 100%
+  );
+  padding: 64px 205px 243px 205px;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  height: 568px;
+  position: relative;
+  overflow: hidden;
+}
+.top {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.col {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 1;
+  position: relative;
+}
+.frame-110 {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 1;
+  position: relative;
+}
+.pages {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 500;
+  opacity: 0.4;
+  position: relative;
+}
+.auto-layout-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.dashboard {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.about-us {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.our-mission {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.our-vision {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.frame-113 {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 1;
+  position: relative;
+}
+.frame-109 {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.catalog {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 500;
+  opacity: 0.4;
+  position: relative;
+}
+.sell-a-ready-made-company {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.buy-a-ready-made-company {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.all-services {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.frame-108 {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.info {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 500;
+  opacity: 0.4;
+  position: relative;
+}
+.articles {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.contacts {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+}
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 1;
+  position: relative;
+}
+.logo {
+  flex-shrink: 0;
+  width: 48px;
+  height: 34px;
+  position: relative;
+}
+.image-2 {
+  width: 393.75%;
+  height: 50px;
+  position: absolute;
+  right: -294.79%;
+  left: 1.04%;
+  top: 0px;
+  object-fit: cover;
+  aspect-ratio: 189/50;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+._252-63-0000000 {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+}
+.info-aduunyosolutions-com {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+}
+.list2 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 249px;
+  height: 44px;
+  position: relative;
+}
+.group-8720 {
+  flex-shrink: 0;
+  width: 249.5px;
+  height: 43.53px;
+  position: static;
+}
+.group-8719 {
+  width: 249.5px;
+  height: 43.53px;
+  position: static;
+}
+.group-57 {
+  width: 249.5px;
+  height: 43.53px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+.x-31-0-linkedin {
+  width: 6.34%;
+  height: 35.86%;
+  position: absolute;
+  right: 46.72%;
+  left: 46.94%;
+  bottom: 36.02%;
+  top: 28.12%;
+  overflow: visible;
+}
+.tik-tok-1 {
+  width: 21.49px;
+  height: 21.49px;
+  position: absolute;
+  left: 164.42px;
+  top: 12.05px;
+  overflow: hidden;
+}
+.group {
+  width: 87.72%;
+  height: 99.85%;
+  position: absolute;
+  right: 6.14%;
+  left: 6.14%;
+  bottom: 0.08%;
+  top: 0.08%;
+  overflow: visible;
+}
+.twitter-1 {
+  width: 20.78px;
+  height: 20.78px;
+  position: absolute;
+  left: 217.44px;
+  top: 11.33px;
+  overflow: visible;
+}
+.block2 {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex: 1;
+  position: relative;
+}
+.btn {
+  background: var(--green, #5ba44c);
+  border-radius: 6px;
+  padding: 8px 16px 10px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.call-us-back {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 500;
+  position: relative;
+}
+.block3 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.omaar-haashi-building-floor-02-hargeisa {
+  color: #ffffff;
+  text-align: right;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.8;
+  position: relative;
+  align-self: stretch;
+}
+.block4 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.from-8-a-m-to-6-p-m {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 500;
+  opacity: 0.8;
+  position: relative;
+}
+.saturday-thursday {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 12px;
+  line-height: 140%;
+  font-weight: 400;
+  opacity: 0.6;
+  position: relative;
+}
+.bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+._2025-all-rights-reserved-designed-by-generex-communication {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 12px;
+  line-height: 130%;
+  font-weight: 400;
+  opacity: 0.4;
+  position: relative;
+}
