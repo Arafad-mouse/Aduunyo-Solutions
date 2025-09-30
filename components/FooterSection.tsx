@@ -52,6 +52,7 @@ export default function FooterSection({
         { text: "How It Works", href: "/about/process" },
         { text: "Terms & Conditions", href: "/about/terms" },
         { text: "Contact", href: "/contact" },
+        { text: "Our Products", href: "/products" },
       ],
     },
     {

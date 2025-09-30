@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import LaunchUI from '../components/logos/launch-ui'
 import "../styles/landing.css"
+import { ProductsList } from './our-products/products-list';
 
 export default function Home() {
   const [loanAmount, setLoanAmount] = useState("")
@@ -52,9 +53,9 @@ export default function Home() {
         <section className="hero" id="hero">
           <div className="container">
             <div className="hero-content">
-              <h1>First Loan at <span className="highlight">0%</span> Up Front</h1>
-              <p>At Aduunyo Solutions, we believe financial empowerment should begin without barriers. That&apos;s why your very first loan with us comes at 0% upfront cost—no hidden charges, no surprise fees.</p>
-              <p>Our goal is to give you access to the essential electronics you need to grow—whether it&apos;s a laptop to expand your business, a smartphone to stay connected, or household electronics to improve your daily life.</p>
+              <h1 style={{ fontSize: '4rem' ,textAlign: 'justify'}}>Empowering lives <br />with technology<br /> <span className="highlight">in East Africa</span></h1>
+              <p style={{ textAlign: 'justify' }}>Access the freedom to embrace smartphones, laptops & TVs with an assurance of timely repayments.</p>
+              <p style={{ textAlign: 'justify' }}>Aduunyo solution is also helping millions of new-to-credit consumers across emerging markets access formal credit and begin their journey toward financial health.</p>
               <div className="cta-block">
                 <Image src="/landing/timmer.svg" alt="Clock icon" className="clock-icon" height={100} width={100} />
                 <h2>Don&apos;t Wait—Own Your<br />Dream Accessory Now.</h2>
@@ -65,25 +66,25 @@ export default function Home() {
 
   
   {/* Testimonial 1 */}
-  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm mt-6">
+  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm mt-6" style={{ backgroundColor: '#f9f9f9' }}>
     <Image src="/landing/avatar0.png" alt="Testimonial 1" width={60} height={60} className="rounded-full" />
     <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
 
   {/* Testimonial 2 */}
-  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm mt-6">
+  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm mt-6" style={{ backgroundColor: '#f9f9f9' }}>
     <Image src="/landing/avatar1.png" alt="Testimonial 2" width={60} height={60} className="rounded-full" />
     <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
 
   {/* Testimonial 3 */}
-  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm">
+  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm" style={{ backgroundColor: '#f9f9f9' }}>
     <Image src="/landing/avatar2.png" alt="Testimonial 3" width={60} height={60} className="rounded-full" />
     <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
 
   {/* Testimonial 4 */}
-  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm">
+  <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl shadow-sm" style={{ backgroundColor: '#f9f9f9' }}>
     <Image src="/landing/avatar3.png" alt="Testimonial 4" width={60} height={60} className="rounded-full" />
     <p className="text-gray-700">&quot;The loan process was smooth, and the support was exceptional. Highly recommend!&quot;</p>
   </div>
@@ -94,8 +95,8 @@ export default function Home() {
             <div className="loan-calculator-card" id="apply">
               <div className="card-header">
                 <Link href="/loan" className="no-underline">
-                  <h2 className="hover:underline cursor-pointer">Apply Now</h2>
-                  <p>For Financial Freedom</p>
+                  <h2 className="hover:underline cursor-pointer" style={{ textAlign: 'center' }}>Apply Now</h2>
+                  <p style={{ textAlign: 'center' }}>For Financial Freedom</p>
                 </Link>
               </div>
               <div className="card-body">
@@ -165,20 +166,20 @@ export default function Home() {
               <div className="logo-item">
                 <Image src="/landing/zaad-10.png" alt="Zaad" width={100} height={40} style={{width: 'auto', height: '40px'}} />
               </div>
-              <div className="logo-item">
+              <div className="logo-item" style={{backgroundColor: '#f5f5f5'}}>
                 <Image src="/landing/wallet-10.svg" alt="Cash Payment" width={100} height={40} />
                 <span>Cash<br />Payment</span>
               </div>
-              <div className="logo-item">
+              <div className="logo-item" style={{backgroundColor: '#f5f5f5'}}>
                 <Image src="/landing/g-41580.svg" alt="Visa" width={100} height={40} style={{width: 'auto', height: '40px'}} />
               </div>
-              <div className="logo-item">
+              <div className="logo-item"   style={{backgroundColor: '#f5f5f5'}}>
                 <Image src="/landing/e-dahab0.svg" alt="eDahab" width={100} height={40} style={{width: 'auto', height: '40px'}} />
               </div>
-              <div className="logo-item">
+              <div className="logo-item" style={{backgroundColor: '#f5f5f5'}}>
                 <Image src="/landing/preimer-wallet0.svg" alt="Premier Wallet" width={100} height={40} style={{width: 'auto', height: '40px'}} />
               </div>
-              <div className="logo-item">
+              <div className="logo-item" style={{backgroundColor: '#f5f5f5'}}>
                 <Image src="/landing/assured-workload1.svg" alt="Bank Transfer" width={100} height={40} />
                 <span>Bank<br />Transfer</span>
               </div>
@@ -187,31 +188,31 @@ export default function Home() {
         </section>
 
         {/* About Us Section */}
-        <section className="about-section" id="about-us">
-          <div className="container">
+        <section className="about-section" id="about-us" style={{ backgroundColor: '#f9f9f9' }}>
+          <div className="container" >
             <div className="about-content">
               {/* Left Column: Text Content */}
               <div className="about-text">
                 <h2 className="section-title">About Us</h2>
                 <div className="title-underline"></div>
                 
-                <div className="company-description">
-                  <p><strong>Aduunyo Solutions</strong> is a Hargeisa-based microfinance company dedicated to making technology accessible and affordable. We empower individuals and businesses by providing laptops, smartphones, and essential electronic items through a flexible monthly payment system.</p>
+                <div className="company-description" style={{ textAlign: 'justify' }}>
+                  <p><strong>Aduunyo Solutions</strong> is dedicated to empowering people through accessible, technology-driven solutions—bridging the gap between aspiration and achievement, one device at a time. Aduunyo Solution Access the freedom to finance smartphones, laptops and TVs with an assurance of timely repayments.</p>
                   
-                  <p>Our approach eliminates the financial barrier to owning modern tools, enabling our customers to connect, learn, and grow without the burden of large upfront costs.</p>
+                  <p>We are committed to endowing the next generation by pioneering innovative financial solutions that drive progress across the solar energy, automotive, and agricultural industries — creating a sustainable future through smart investment and visionary growth.</p>
                 </div>
 
                 <div className="mission-vision">
                   <div className="mission">
-                    <h3 className="subsection-title">Our Mission</h3>
-                    <div className="subsection-underline"></div>
-                    <p>To bridge the digital divide by providing affordable access to essential electronics through microfinance solutions that empower people to achieve more in their personal and professional lives.</p>
+                    <h3 className="subsection-title" style={{ textAlign: 'justify' }}>Our Vision</h3>
+                    <div className="subsection-underline" style={{ textAlign: 'justify' }}></div>
+                    <p style={{ textAlign: 'justify' }}>Aduunyo solution vision is to enable convenient financing opportunities for consumers, entrepreneurs and small merchants, helping them combat the socioeconomic problems this segment faces from restricted access to financing.</p>
                   </div>
 
                   <div className="vision">
-                    <h3 className="subsection-title">Our Vision</h3>
-                    <div className="subsection-underline"></div>
-                    <p>To become the leading microfinance partner in Somaliland and beyond, driving inclusive growth and digital empowerment by making technology accessible to all.</p>
+                    <h3 className="subsection-title" style={{ textAlign: 'justify' }}>Our Mission</h3>
+                    <div className="subsection-underline" style={{ textAlign: 'justify' }}></div>
+                    <p style={{ textAlign: 'justify' }}>Aduunyo solution mission is to drive inclusion amongst millions of unbanked and underbanked populations across the world by building efficient solutions and an ecosystem with relevant partners that help in an effective business model for our clients to grow.</p>
                   </div>
                 </div>
               </div>

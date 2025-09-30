@@ -355,7 +355,7 @@ body {
 .process-steps::before {
   content: '';
   position: absolute;
-  left: 25px; /* Corresponds to half of the step-number width */
+  left: 55px; /* Corresponds to half of the step-number width */
   top: 25px; /* Start from center of first circle */
   bottom: 75px; /* End at center of last circle */
   width: 2px;

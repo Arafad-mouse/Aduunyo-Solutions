@@ -7,7 +7,6 @@ import { Check, ChevronRight, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
-
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
@@ -181,6 +180,39 @@ const DropdownMenuShortcut = ({
   );
 };
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
+
+
+interface CalendarDropdownProps {
+  value?: string | number;
+  onChange?: (value: string | number) => void;
+  options?: Array<{ value: string | number; label: string }>;
+}
+
+function CalendarDropdown({ value, onChange, options = [] }: CalendarDropdownProps) {
+  const selected = options?.find((opt: { value: string | number }) => opt.value.toString() === value?.toString());
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex h-8 items-center justify-between rounded-md border bg-background px-3 text-sm">
+          {selected?.label}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="max-h-60 w-40 overflow-y-auto">
+        {options.map((opt: { value: string | number; label: string }) => (
+          <DropdownMenuItem
+            key={opt.value}
+            onSelect={() => onChange?.(opt.value)}
+            className="cursor-pointer"
+          >
+            {opt.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 
 export {
   DropdownMenu,

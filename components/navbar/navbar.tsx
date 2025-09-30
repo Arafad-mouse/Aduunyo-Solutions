@@ -23,7 +23,8 @@ const Navbar = () => {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/#about-us', label: 'About' },
-    { href: '/services', label: 'Services' },
+    { href: '/services', label: 'Our Partners & Clients' },
+    { href: '/our-products', label: 'Our Products' },
     { href: '/loan-application', label: 'Apply Now' },
   ];
 
@@ -56,7 +57,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
-          <div className="flex-shrink-0 flex items-center" style={{width: '100px', height: '100px'}}>
+          <div className="flex-shrink-0 flex items-center" style={{width: '350px', height: '350px'}}>
             <Link href="/aduunyo-solutions/logo.png" className="flex items-center space-x-2 group">
               {/* Logo placeholder - replace with actual logo */}
               <LaunchUI/>

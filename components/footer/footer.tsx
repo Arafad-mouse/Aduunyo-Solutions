@@ -9,8 +9,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1">
-            <h2 className="text-lg font-semibold text-[#8BB42E]">Aduunyo Solutions</h2>
-            <p className="mt-4 text-sm">
+            <h2 className="text-lg font-semibold text-[#5ba44c]">Aduunyo Solutions</h2>
+            <p className="mt-4 text-sm" style={{ textAlign: 'justify' }}>
             Aduunyo Solutions was established in 2024 in response to the growing demand for innovative technology and creative solutions within the local market.<br></br> <br></br>
             
             Many businesses and organizations were seeking reliable partners to support their digital transformation, branding, and communication needs.</p>
@@ -23,42 +23,43 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold tracking-wider uppercase text-[#8BB42E]">Quick links</h3>
+            <h3 className="text-sm font-semibold tracking-wider uppercase text-[#5ba44c]">Quick links</h3>
             <ul className="mt-4 space-y-4">
               <li><Link href="/" className="text-base text-gray-500 hover:text-gray-900">Home</Link></li>
               <li><Link href="/#about-us" className="text-base text-gray-500 hover:text-gray-900">About</Link></li>
               <li><Link href="/loan-application" className="text-base text-gray-500 hover:text-gray-900">Apply Now</Link></li>
+              <li><Link href="/contact" className="text-base text-gray-500 hover:text-gray-900">Our Products</Link></li>
               <li><Link href="/contact" className="text-base text-gray-500 hover:text-gray-900">Contacts</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-[#8BB42E] tracking-wider uppercase">Subscribe to Our Newsletter</h3>
+            <h2 className="text-sm font-semibold text-[#5ba44c] tracking-wider uppercase text-bold">Subscribe to Our Newsletter</h2>
             <p className="mt-4 text-sm text-gray-500">Subscribe and stay up to date with our news and upcoming events.</p>
             <form className="mt-4 sm:flex sm:max-w-md">
               <Input type="email" placeholder="Enter Email" className="w-full" />
               <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                <Button type="submit" className="bg-[#8BB42E] hover:bg-[#8BB42E]/80">Send</Button>
+                <Button type="submit" className="bg-[#5ba44c] hover:bg-[#5ba44c]/80">Send</Button>
               </div>
             </form>
             <div className="mt-6">
-                <h4 className="text-sm font-semibold text-[#8BB42E]">Chat With Us</h4>
+                <h3 className="text-sm font-semibold text-[#5ba44c]">Chat With Us</h3>
                 <p className="text-sm text-gray-500">Connect with us on Whatsapp</p>
             </div>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-[#8BB42E] tracking-wider uppercase">Contacts us </h3>
+            <h2 className="text-sm font-semibold text-[#5ba44c] tracking-wider uppercase text-bold" >Contacts us </h2>
             <div className="mt-4 space-y-4">
-                <p className="text-gray-600">Call Us<br/>Telephone: +252 63 00000000, +252 65 0000000</p>
-                <p className="text-gray-600">Mail Us<br/>info@Aduunyo-solutions.com, support@Aduunyo-solutions.com</p>
-                <p className="text-gray-600">Visit Us<br/>Road No. 123, Hargeisa, Somaliland</p>
+                <p className="text-gray-600">Call Us On <br/>+252 63 00000000 , <br></br>+252 65 0000000</p>
+                <p className="text-gray-600">Mail Us<br/>info@Aduunyo-solutions.com support@Aduunyo-solutions.com</p>
+                <p className="text-gray-600">Visit Us<br/>Road Number 01,Kheyriyada Area, Hargeisa, Somaliland</p>
             </div>
           </div>
         </div>
 
         <div className="mt-12 border-t border-gray-200 pt-8 flex justify-between items-center">
-          <p className="text-base text-gray-400 xl:text-center">© 2024 Aduunyo Solutions.      Developed by <a href="https://generexco.com" className="text-[#8BB42E] hover:underline">Generex Communication</a></p>
+          <p className="text-base text-gray-400 xl:text-center">© 2024 Aduunyo Solutions.      Developed by <a href="https://generexco.com" className="text-[#5ba44c] hover:underline">Generex Communication</a></p>
           <div className="flex items-center">
             <p>2025 Version </p>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

@@ -5,91 +5,105 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 
+const links = [
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "About",
+    href: "/about",
+  },
+  {
+    label: "Products",
+    href: "/products",
+  },
+]
 
-export default function Navbar() {
+const Navbar = () => {
   const pathname = usePathname()
-  
+
   return (
-    <nav className="flex items-center justify-between px-4 py-2 shadow bg-black">
-      <div className="flex items-center space-x-3">
-        {/* Logo */}
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/4.png"
-            alt="Aduunyo Solutions Logo"
-            width={240}
-            height={65}
-            priority
-            className="h-12 w-auto"
-          />
-        </Link>
-      </div>
+    <nav className="bg-white shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/" className="flex-shrink-0 flex items-center">
+              <Image
+                src="/4.png"
+                alt="Aduunyo Solutions"
+                width={200}
+                height={60}
+                className="h-12 w-auto"
+                priority
+              />
+            </Link>
+          </div>
 
-      {/* Navigation Links */}
-      <div className="hidden md:flex items-center space-x-6">
-        <Link href="/" className={`px-4 py-2 transition ${
-          pathname === "/" 
-            ? "text-blue-400 font-semibold" 
-            : "text-white hover:text-gray-300"
-        }`}>
-          Home
-        </Link>
-        
-        <Link href="/about" className={`px-4 py-2 transition ${
-          pathname?.startsWith("/about") 
-            ? "text-blue-400 font-semibold" 
-            : "text-white hover:text-gray-300"
-        }`}>
-          About
-        </Link>
-        
-        <Link href="/services" className={`px-4 py-2 transition ${
-          pathname?.startsWith("/services") 
-            ? "text-blue-400 font-semibold" 
-            : "text-white hover:text-gray-300"
-        }`}>
-          Services
-        </Link>
-        
-        <Link href="/contact" className={`px-4 py-2 transition ${
-          pathname === "/contact" 
-            ? "text-blue-400 font-semibold" 
-            : "text-white hover:text-gray-300"
-        }`}>
-          Contact
-        </Link>
-        
-        <Link href="/loan" className={`px-4 py-2 transition rounded ${
-          pathname === "/loan" 
-            ? "bg-blue-500 text-white font-semibold" 
-            : "bg-blue-600 text-white hover:bg-blue-700"
-        }`}>
-          Apply Now
-        </Link>
-      </div>
+          <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+            {links.map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  pathname === href
+                    ? "border-[#5ca34c] text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
 
-      {/* Mobile Menu Button */}
-      <button
-        className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-gray-700 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-400 md:hidden"
-        aria-expanded="false"
-      >
-        <span className="sr-only">Open main menu</span>
-        <svg
-          className="h-6 w-6"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
+          <div className="-mr-2 flex items-center sm:hidden">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#5ca34c]"
+              aria-controls="mobile-menu"
+              aria-expanded="false"
+            >
+              <span className="sr-only">Open main menu</span>
+              <svg
+                className="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu, show/hide based on menu state */}
+        <div className="sm:hidden" id="mobile-menu">
+          <div className="pt-2 pb-3 space-y-1">
+            {links.map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  pathname === href
+                    ? "bg-[#5ca34c] border-[#5ca34c] text-white"
+                    : "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
     </nav>
   )
 }
+
+export default Navbar
