@@ -1,64 +1,6 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          // If the cookie is set, update the request's cookies.
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          // If the cookie is removed, update the request's cookies.
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-        },
-      },
-    }
-  );
-
-  // This will refresh the user's session if it's expired.
-  const { data: { user } } = await supabase.auth.getUser();
-
   // List of public paths that don't require authentication
   const publicPaths = [
     '/',                 // Home
@@ -80,16 +22,29 @@ export async function updateSession(request: NextRequest) {
   const isPublicPath = 
     request.nextUrl.pathname.startsWith('/api') ||
     request.nextUrl.pathname.startsWith('/_next/') ||
+    request.nextUrl.pathname.startsWith('/favicon.ico') ||
     publicPaths.some(path => 
       request.nextUrl.pathname === path || 
       (path !== '/' && request.nextUrl.pathname.startsWith(`${path}/`))
     );
 
-  if (!user && !isPublicPath) {
+  // If it's a public path, allow access
+  if (isPublicPath) {
+    return NextResponse.next();
+  }
+
+  // Check for Supabase session cookies
+  const accessToken = request.cookies.get('sb-access-token')?.value;
+  const refreshToken = request.cookies.get('sb-refresh-token')?.value;
+  
+  // Simple check - if no session cookies exist, redirect to login
+  // The actual session validation will happen on the server-side
+  if (!accessToken && !refreshToken) {
     const url = request.nextUrl.clone();
     url.pathname = '/auth/login';
     return NextResponse.redirect(url);
   }
 
-  return response;
+  // Allow the request to continue
+  return NextResponse.next();
 }
