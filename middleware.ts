@@ -1,67 +1,55 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-// Minimal matcher - only run on non-static files
-// This is the safest matcher for Edge Runtime
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // Match all paths except API, static files, and images
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
 
-// List of paths that don't require authentication
-const PUBLIC_PATHS = [
-  '/',
-  '/services',
-  '/loan',
-  '/loan-application',
-  '/our-product',
-  '/contact',
-  '/thank-you',
-  '/auth/login',
-  '/auth/register',
-  '/auth/forgot-password',
-  '/auth/update-password',
-  '/auth/sign-up',
-  '/auth/sign-up-success',
-  '/api', // Allow all API routes through
-];
+export default function middleware(req: NextRequest) {
+  try {
+    const pathname = req.nextUrl.pathname;
 
-// Helper to check if path is public
-function isPublicPath(pathname: string): boolean {
-  // Check exact matches
-  if (PUBLIC_PATHS.includes(pathname)) return true;
-  
-  // Check path prefixes (e.g., /auth/...)
-  return PUBLIC_PATHS.some(
-    (path) => path !== '/' && pathname.startsWith(path)
-  );
-}
+    // List of public paths that do not require auth
+    const publicPaths = [
+      '/', '/services', '/loan', '/loan-application', '/our-product',
+      '/contact', '/thank-you',
+      '/auth/login', '/auth/register', '/auth/forgot-password',
+      '/auth/update-password', '/auth/sign-up', '/auth/sign-up-success',
+    ];
 
-export default function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+    // Check if current path is public, API route, or static
+    const isPublicPath =
+      pathname.startsWith('/api') ||
+      pathname.startsWith('/_next/') ||
+      pathname.startsWith('/favicon.ico') ||
+      publicPaths.includes(pathname) ||
+      publicPaths.some(path => path !== '/' && pathname.startsWith(`${path}/`));
 
-  // 1. Allow all API routes
-  if (pathname.startsWith('/api/')) {
+    if (isPublicPath) {
+      return NextResponse.next();
+    }
+
+    // Check for authentication cookies (edge-safe)
+    const accessToken = req.cookies.get('sb-access-token')?.value ?? null;
+    const refreshToken = req.cookies.get('sb-refresh-token')?.value ?? null;
+
+    if (!accessToken && !refreshToken) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/auth/login';
+      return NextResponse.redirect(url);
+    }
+
+    // Allow request to continue
     return NextResponse.next();
+
+  } catch (error) {
+    console.error('Edge Middleware Error:', error);
+
+    // Fallback redirect on error
+    const url = req.nextUrl.clone();
+    url.pathname = '/auth/login';
+    return NextResponse.redirect(url);
   }
-
-  // 2. Allow public paths
-  if (isPublicPath(pathname)) {
-    return NextResponse.next();
-  }
-
-  // 3. Check for auth tokens
-  const hasAuthToken = 
-    request.cookies.has('sb-access-token') || 
-    request.cookies.has('sb-refresh-token');
-
-  // 4. If no auth token, redirect to login
-  if (!hasAuthToken) {
-    const loginUrl = new URL('/auth/login', request.url);
-    loginUrl.searchParams.set('redirectedFrom', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // 5. User is authenticated, allow the request
-  return NextResponse.next();
 }
