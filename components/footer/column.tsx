@@ -9,7 +9,7 @@ export interface FooterColumnItem {
   description?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  LinkComponent?: React.ReactType;
+  LinkComponent?: React.ElementType;
 }
 
 export interface FooterColumn {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next"
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import "./globals.css";
@@ -40,6 +41,7 @@ export default function RootLayout({
           <main className="pt-16">{children}</main>
           <Footer />
           <Toaster />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

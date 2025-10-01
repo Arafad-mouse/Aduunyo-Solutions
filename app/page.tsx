@@ -5,7 +5,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import LaunchUI from '../components/logos/launch-ui'
 import "../styles/landing.css"
-import { ProductsList } from './our-products/products-list';
 
 export default function Home() {
   const [loanAmount, setLoanAmount] = useState("")
@@ -264,6 +263,6 @@ export default function Home() {
         </div>
         </section>
 
-            </>
+      </>
   )
 }

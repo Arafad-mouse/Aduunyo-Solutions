@@ -51,7 +51,7 @@ const Footer = () => {
           <div>
             <h2 className="text-sm font-semibold text-[#5ba44c] tracking-wider uppercase text-bold" >Contacts us </h2>
             <div className="mt-4 space-y-4">
-                <p className="text-gray-600">Call Us On <br/>+252 63 00000000 , <br></br>+252 65 0000000</p>
+                <p className="text-gray-600">Call Us On <br/>+252 63 9119000 , <br></br>+252 65 9119000</p>
                 <p className="text-gray-600">Mail Us<br/>info@Aduunyo-solutions.com support@Aduunyo-solutions.com</p>
                 <p className="text-gray-600">Visit Us<br/>Road Number 01,Kheyriyada Area, Hargeisa, Somaliland</p>
             </div>
