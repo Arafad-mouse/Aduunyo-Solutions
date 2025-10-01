@@ -1,0 +1,31 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage
+__tests__
+e2e
+playwright-report
+test-results
+
+# Development files
+.swc
+tsconfig.tsbuildinfo
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
