@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import LaunchUI from '../components/logos/launch-ui'
 import "../styles/landing.css"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function Home() {
   const [loanAmount, setLoanAmount] = useState("")
@@ -93,7 +94,7 @@ export default function Home() {
             </div>
             <div className="loan-calculator-card" id="apply">
               <div className="card-header">
-                <Link href="/loan" className="no-underline">
+                <Link href="/loan-application" className="no-underline">
                   <h2 className="hover:underline cursor-pointer" style={{ textAlign: 'center' }}>Apply Now</h2>
                   <p style={{ textAlign: 'center' }}>For Financial Freedom</p>
                 </Link>
@@ -138,12 +139,13 @@ export default function Home() {
                     <option value="visa">Visa</option>
                   </select>
                 </div>
-                <Link href="/loan" className="apply-button">Apply Now</Link>
+                <Link href="/loan-application" className="apply-button">Apply Now</Link>
                 <div className="monthly-payback">
                   <h4>Monthly Payback</h4>
                   <p>{monthlyPayback}</p>
                 </div>
-                <a href="#" className="read-more-button">Read More</a>
+                <a href="#about-us" className="read-more-button">Read More</a>
+
               </div>
             </div>
           </div>
@@ -262,6 +264,7 @@ export default function Home() {
           </div>
         </div>
         </section>
+        <SpeedInsights />
 
       </>
   )

@@ -303,9 +303,10 @@ export default function LoanApplicationPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              
               {/* Personal Information Card */}
               <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4">
+                <div className="bg-[#5ca34c] px-6 py-4">
                   <h2 className="text-xl font-bold text-white">1. Personal Information</h2>
                   <p className="text-white text-sm">Please provide your personal details</p>
                 </div>
@@ -487,7 +488,7 @@ export default function LoanApplicationPage() {
 
               {/* Employment & Income Details Card */}
               <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4">
+                <div className="bg-[#5ca34c] px-6 py-4">
                   <h2 className="text-xl font-bold text-white">2. Employment & Income Details</h2>
                   <p className="text-green-100 text-sm">Please provide your employment information</p>
                 </div>
@@ -653,7 +654,7 @@ export default function LoanApplicationPage() {
 
             {/* Submission Card */}
             <div className="mt-8 bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4">
+              <div className="bg-[#5ca34c] px-6 py-4">
                 <h2 className="text-xl font-bold text-white">3. Document Upload & Agreement</h2>
                 <p className="text-green-100 text-sm">Final step - upload documents and agree to terms</p>
               </div>
@@ -702,6 +703,7 @@ export default function LoanApplicationPage() {
                   )}
                 </div>
                 
+                
                 {/* Document Upload */}
                 <div className="space-y-4">
                   <div>
@@ -719,7 +721,7 @@ export default function LoanApplicationPage() {
                       className="group flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-all duration-300 hover:border-purple-400 focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-purple-500"
                     >
                       <div className="flex flex-col items-center justify-center py-6 px-4 text-center">
-                        <div className="p-3 mb-4 rounded-full bg-purple-100 group-hover:bg-purple-200 transition-colors duration-200">
+                        <div className="p-3 mb-4 rounded-full bg-green-100 group-hover:bg-green-200 transition-colors duration-200">
                           <Upload className="w-8 h-8 text-green-600" />
                         </div>
                         <p className="mb-2 text-lg font-semibold text-gray-700 group-hover:text-green-700 transition-colors">
@@ -749,19 +751,21 @@ export default function LoanApplicationPage() {
                       {errors.uploadedDocument?.message ? String(errors.uploadedDocument?.message) : ''}
                     </p>
                   )}
+                  <br></br>
                   
                   {/* File Preview */}
                   {uploadedFiles.length > 0 && (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div className="space-y-2">
                         {uploadedFiles.map((file, index) => (
                           <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200">
                             <div className="flex items-center space-x-4">
-                              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center shadow-sm">
+                              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center shadow-sm">
+                                
                                 {file.type.includes('pdf') ? (
-                                  <span className="text-sm font-bold text-blue-700">PDF</span>
+                                  <span className="text-sm font-bold text-green-700">PDF</span>
                                 ) : (
-                                  <span className="text-sm font-bold text-green-700">IMG</span>
+                                  <span className="text-sm font-bold text-black">IMG</span>
                                 )}
                               </div>
                               <div>
@@ -788,11 +792,11 @@ export default function LoanApplicationPage() {
                 </div>
                 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-none border-gray-200">
                   <Button 
                     variant="outline" 
                     type="button" 
-                    className="flex-1 h-12 rounded-xl border-gray-300 hover:bg-gray-50 transition-colors" 
+                    className="flex-1 h-12 rounded-xl border-none hover:bg-gray-50 transition-colors" 
                     onClick={() => router.push('/')}
                   >
                     Cancel Application
@@ -811,10 +815,13 @@ export default function LoanApplicationPage() {
                       'Submit Application'
                     )}
                   </Button>
+                  <br></br>
                 </div>
               </div>
             </div>
           </form>
+          <br></br>
+          <br></br>
         </div>
       </div>
     </>

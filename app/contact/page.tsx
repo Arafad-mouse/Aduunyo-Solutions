@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { createClient } from '@/lib/supabase/client'
 
 import {
   Form,
@@ -48,6 +49,7 @@ const formSchema = z.object({
 });
 
 export default function ContactForm() {
+  const supabase = createClient();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,9 +63,36 @@ export default function ContactForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast.success('Your message has been sent successfully!');
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      // Insert the form data into the contact-us table
+      const { data, error } = await supabase
+        .from('contact_us')  // Changed from 'contact-us' to 'contact_us' to match your table name
+        .insert([
+          { 
+            first_name: values['text-input-0'],
+            last_name: values['text-input-1'],
+            email: values['email-input-0'],
+            phone_number: values['tel-input-0'],  // Changed from 'phone' to 'phone_number'
+            subject: values['select-0'],
+            message: values['textarea-0']
+            // Removed created_at as it has a default value in the database
+          },
+        ])
+        .select()
+
+      if (error) throw error;
+      
+      // Show success message
+      toast.success('Your message has been sent successfully!');
+      
+      // Reset the form
+      form.reset();
+      
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('Failed to send message. Please try again.');
+    }
   }
 
   function onReset() {
@@ -72,210 +101,130 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="container max-w-3xl py-12">
-      <Card>
-        <CardHeader>
-          <CardTitle>Contact Us</CardTitle>
-          <CardDescription>
-            Get in touch with our team for any inquiries.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              onReset={onReset}
-              className="space-y-6 @container"
-            >
-              <div className="grid grid-cols-12 gap-4">
-                <div key="text-0" id="text-0" className="col-span-12 col-start-auto">
-                  <p className="leading-7 not-first:mt-6">
-                    <span className="text-lg font-semibold">Contact Us</span>
-                    <br />
-                    <span className="text-sm text-muted-foreground">
-                      Get in touch with our team for any inquiries.
-                    </span>
-                  </p>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="text-input-0"
-                  render={({ field }) => (
-                    <FormItem className="col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                      <FormLabel className="flex shrink-0">First Name</FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <div className="relative w-full">
-                            <Input
-                              key="text-input-0"
-                              placeholder="John"
-                              type="text"
-                              id="text-input-0"
-                              {...field}
-                            />
-                          </div>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-3xl">
+        <Card className="bg-white shadow-lg rounded-xl overflow-hidden">
+          <CardHeader className="text-center p-8 bg-[#5ca34c] border-none" style={{ boxShadow: 'none', borderColor: 'none' }}>
+            <CardTitle className="text-3xl font-bold text-white" style={{ fontSize: '2rem' }}>Contact Us</CardTitle>
+            <CardDescription className="text-lg text-white mt-2" style={{ fontSize: '1rem' }}>
+              Get in touch with our team for any inquiries.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-8">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                onReset={onReset}
+                className="space-y-6"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="text-input-0"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-800">First Name</FormLabel>
+                        <FormControl style={{ backgroundColor: '#f9f9f9' ,borderColor: '#c1c1c1'}}>
+                          <Input placeholder="First Name" {...field} className="bg-gray-100"/>
                         </FormControl>
                         <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="text-input-1"
-                  render={({ field }) => {
-                    const { ref, ...restField } = field;
-                    return (
-                      <FormItem className="col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                        <FormLabel className="flex shrink-0">Last Name</FormLabel>
-                        <div className="w-full">
-                          <FormControl>
-                            <div className="relative w-full">
-                              <Input
-                                ref={ref}
-                                key="text-input-1"
-                                placeholder="Doe"
-                                type="text"
-                                id="text-input-1"
-                                {...restField}
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </div>
                       </FormItem>
-                    );
-                  }}
-                />
-
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="text-input-1"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-800">Last Name</FormLabel>
+                        <FormControl style={{ backgroundColor: '#f9f9f9' ,borderColor: '#c1c1c1'}}>
+                          <Input placeholder="Last Name" {...field} className="bg-gray-100"/>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="email-input-0"
                   render={({ field }) => (
-                    <FormItem className="col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                      <FormLabel className="flex shrink-0">Email</FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <div className="relative w-full">
-                            <Input
-                              key="email-input-0"
-                              placeholder="john@example.com"
-                              type="email"
-                              id="email-input-0"
-                              autoComplete="off"
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </div>
+                    <FormItem>
+                      <FormLabel className="text-gray-800">Email</FormLabel>
+                      <FormControl style={{ backgroundColor: '#f9f9f9' ,borderColor: '#c1c1c1'}}>
+                        <Input type="email" placeholder="example@gmail.com" {...field} className="bg-gray-100"/>
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="tel-input-0"
                   render={({ field }) => (
-                    <FormItem className="col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                      <FormLabel className="flex shrink-0">Phone Number</FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <div className="relative w-full">
-                            <Input
-                              key="tel-input-0"
-                              placeholder="+1 (555) 000-0000"
-                              type="tel"
-                              id="tel-input-0"
-                              autoComplete="off"
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </div>
+                    <FormItem>
+                      <FormLabel className="text-gray-800">Phone Number</FormLabel>
+                      <FormControl style={{ backgroundColor: '#f9f9f9' ,borderColor: '#c1c1c1'}}>
+                        <Input type="tel" placeholder="+252 (63) 000-0000" {...field} className="bg-gray-100"/>
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="select-0"
                   render={({ field }) => (
-                    <FormItem className="col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                      <FormLabel className="flex shrink-0">Subject</FormLabel>
-                      <div className="w-full">
+                    <FormItem>
+                      <FormLabel className="text-gray-800">Subject</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value} >
                         <FormControl>
-                          <Select
-                            key="select-0"
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a subject" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem key="general" value="general">
-                                General Inquiry
-                              </SelectItem>
-                              <SelectItem key="support" value="support">
-                                Technical Support
-                              </SelectItem>
-                              <SelectItem key="sales" value="sales">
-                                Sales Question
-                              </SelectItem>
-                              <SelectItem key="billing" value="billing">
-                                Billing Question
-                              </SelectItem>
-                              <SelectItem key="other" value="other">
-                                Other
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <SelectTrigger style={{ backgroundColor: '#f9f9f9' ,borderColor: '#c1c1c1', width: '100%'}}>
+                            <SelectValue placeholder="Select a subject" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </div>
+                        <SelectContent>
+                          <SelectItem value="general">General Inquiry</SelectItem>
+                          <SelectItem value="support">Technical Support</SelectItem>
+                          <SelectItem value="sales">Sales Question</SelectItem>
+                          <SelectItem value="billing">Billing Question</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="textarea-0"
                   render={({ field }) => (
-                    <FormItem className="col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                      <FormLabel className="flex shrink-0">Message</FormLabel>
-                      <div className="w-full">
-                        <FormControl>
-                          <Textarea
-                            key="textarea-0"
-                            id="textarea-0"
-                            placeholder="Please provide details about your inquiry..."
-                            className="min-h-[120px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
+                    <FormItem>
+                      <FormLabel className="text-gray-800">Message</FormLabel>
+                      <FormControl>
+                        <Textarea style={{ backgroundColor: '#f9f9f9' ,borderColor: '#c1c1c1'}}
+                          placeholder="Please provide details about your inquiry..."
+                          className="min-h-[120px] bg-gray-100"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <div className="col-span-12 flex justify-end gap-4">
-                  <Button type="reset" variant="outline">
+                <div className="flex justify-end gap-4 pt-4">
+                  <Button type="reset" variant="outline" size="default" className="bg-gray-200 hover:bg-gray-300 text-gray-800 border-none">
                     Reset
                   </Button>
-                  <Button type="submit">
+                  <Button type="submit" size="default" className="bg-[#5ba44c] hover:bg-[#5ba44c]/90 text-white border-none">
                     Send Message
-                  </Button>
+                  </Button> 
                 </div>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

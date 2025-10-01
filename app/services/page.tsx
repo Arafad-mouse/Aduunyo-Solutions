@@ -108,12 +108,13 @@ const ServicesPage = () => {
               <p className="text-gray-700 mb-6">
                 Join our network of partners and start offering flexible financing options to your customers today.
               </p>
-              <button 
-                className="text-white font-medium py-3 px-8 rounded-lg transition-colors duration-300 hover:opacity-90"
+              <a 
+                href="/contact"
+                className="inline-block text-white font-medium py-3 px-8 rounded-lg transition-colors duration-300 hover:opacity-90"
                 style={{ backgroundColor: '#5ba44c' }}
               >
                 Contact Our Partnership Team
-              </button>
+              </a>
             </div>
           </div>
         </div>

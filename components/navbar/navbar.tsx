@@ -24,8 +24,9 @@ const Navbar = () => {
     { href: '/', label: 'Home' },
     { href: '/#about-us', label: 'About' },
     { href: '/services', label: 'Our Partners & Clients' },
-    { href: '/our-products', label: 'Our Products' },
+    { href: '/our-product', label: 'Our Products' },
     { href: '/loan-application', label: 'Apply Now' },
+    { href: '/contact', label: 'Contact' },
   ];
 
   // Check if link is active
