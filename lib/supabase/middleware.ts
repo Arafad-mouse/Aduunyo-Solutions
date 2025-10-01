@@ -1,8 +1,6 @@
-import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
-import { hasEnvVars } from "../utils";
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
 
-// This function can be marked `async` if using `await` inside
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
     request: {
@@ -10,21 +8,16 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // If the env vars are not set, skip middleware check
-  if (!hasEnvVars) {
-    return response;
-  }
-
-  // Create a new Supabase client for each request
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
     {
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value;
         },
-        set(name: string, value: string, options: any) {
+        set(name: string, value: string, options: CookieOptions) {
+          // If the cookie is set, update the request's cookies.
           request.cookies.set({
             name,
             value,
@@ -41,7 +34,8 @@ export async function updateSession(request: NextRequest) {
             ...options,
           });
         },
-        remove(name: string, options: any) {
+        remove(name: string, options: CookieOptions) {
+          // If the cookie is removed, update the request's cookies.
           request.cookies.set({
             name,
             value: '',
@@ -62,56 +56,40 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: If you remove getClaims() and you use server-side rendering
-  // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  // This will refresh the user's session if it's expired.
+  const { data: { user } } = await supabase.auth.getUser();
 
   // List of public paths that don't require authentication
   const publicPaths = [
-    "/",                 // Home
-    "/services",         // Our Partners & Clients page
-    "/loan",             // Apply Now page
-    "/loan-application", // Alternate apply path
-    "/our-product",      // Products page (singular dir)
-    "/contact",
-    "/thank-you",
-    "/auth/login",
-    "/auth/register",
+    '/',                 // Home
+    '/services',         // Our Partners & Clients page
+    '/loan',             // Apply Now page
+    '/loan-application', // Alternate apply path
+    '/our-product',      // Products page (singular dir)
+    '/contact',
+    '/thank-you',
+    '/auth/login',
+    '/auth/register',
+    '/auth/forgot-password',
+    '/auth/update-password',
+    '/auth/sign-up',
+    '/auth/sign-up-success',
   ];
 
-  // Check if the current path is public or an API route
+  // Check if the current path is public, an API route, or a static file
   const isPublicPath = 
     request.nextUrl.pathname.startsWith('/api') ||
+    request.nextUrl.pathname.startsWith('/_next/') ||
     publicPaths.some(path => 
       request.nextUrl.pathname === path || 
-      request.nextUrl.pathname.startsWith(`${path}/`)
+      (path !== '/' && request.nextUrl.pathname.startsWith(`${path}/`))
     );
 
-  // Only redirect to login if the path is not public and user is not authenticated
-  if (!isPublicPath && !user) {
-    // no user, potentially respond by redirecting the user to the login page
+  if (!user && !isPublicPath) {
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = '/auth/login';
     return NextResponse.redirect(url);
   }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
 
   return response;
 }
